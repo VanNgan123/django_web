@@ -36,9 +36,7 @@
       media="screen"
       href="{% static 'app/css/main.css' %}"
     />
-
     <!-- js -->
-
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
       integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
@@ -58,12 +56,47 @@
     <script src="{% static 'app/js/myscript.js' %}"></script>
     <script src="{% static 'app/js/s3.js' %}"></script>
     <script src="{% static 'app/js/all.min.js' %}"></script>
+    <script type="text/javascript">
+      var user = "{{request.user}}";
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      const csrftoken = getCookie("csrftoken");
+    </script>
   </head>
+
   <body>
     <!-- menu -->
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav
+      class="navbar navbar-expand-lg"
+      style="
+        padding: 10px 25px;
+        background: linear-gradient(
+          to right,
+          #6a1b9a,
+          #8e24aa,
+          #ab47bc,
+          #d81b60
+        );
+        color: #fff;
+      "
+    >
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="#" style="color: #fff; font-weight: bold">
           <img
             src="{% static 'app/images/Neel.png' %}"
             alt=""
@@ -85,83 +118,207 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Trang chủ</a>
-            </li>
-            <li class="nav-item dropdown">
               <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                class="nav-link active"
+                aria-current="page"
+                href="{% url 'home' %}"
+                style="color: #fff"
+                >Trang chủ</a
               >
-                Sản phẩm
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Sữa</a></li>
-                <li><a class="dropdown-item" href="#">Sữa</a></li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Giới thiệu</a>
+              <a class="nav-link" href="#" style="color: #fff">Giới thiệu</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Liên hệ</a></a>
+              <a class="nav-link" href="#" style="color: #fff">Liên hệ</a>
             </li>
           </ul>
-          <form class="d-flex" role="search">
+          <form
+            class="d-flex"
+            role="search"
+            style="margin-right: 20px"
+            action="{% url 'search' %}"
+            method="GET"
+          >
+            
             <input
               class="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
+              name="query"
+              value="{{ query }}"
             />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
+            <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+          {% if request.user.is_authenticated %}
+          <div class="form-inline my-2 my-lg-0">
+            <span style="color: #fff">Hello! {{request.user}}</span>
+            <span
+              ><a href="{% url 'logout' %}" class="btn btn-danger"
+                >Logout</a
+              ></span
             >
-              User1
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
-              <li><a class="dropdown-item" href="{% url 'checkout' %}">Đơn hàng</a></li>
-              <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
-            </ul>
+          </div>
+          {% else %}
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="{% url 'login' %}"
+              style="color: #fff"
+              >Đăng nhập</a
+            >
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'cart' %}">Giỏ hàng</a>
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="{% url 'register' %}"
+              style="color: #fff"
+              >Đăng kí</a
+            >
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Đăng nhập</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Đăng kí</a>
-          </li>
-          
+          {% endif %}
         </ul>
+        <div class="form-inline my-2 my-lg-0">
+          <a href="{% url 'cart' %}"
+            ><img id="cart-icon" src="{% static 'images/cart.png' %}"
+          /></a>
+        </div>
       </div>
     </nav>
-    <div style="margin-bottom: 60px;">
-    <!-- <main></main> -->
-    {% block banner_slider %}{% endblock banner_slider %}
-    {% block main-content %}{% endblock main-content %}
-    {% block cart_content %}{% endblock cart_content %}
-    {% block content_checkout %}{% endblock content_checkout %}
+    <div style="margin-bottom: 60px">
+      <!-- <main></main> -->
+      {% block search %}{% endblock search %}
+      {% block banner_slider %}{% endblock banner_slider %} 
+      {% block main-content %}{% endblock main-content %} 
+      {% block cart_content %}{%endblock cart_content %} 
+      {% block content_checkout %}{% endblock content_checkout %} 
+      {% block register %}{% endblock register %} 
+      {% block login %}{% endblock login %}
+      
     </div>
     <!-- footer -->
-    
-    <footer class="container-fluid bg-success text-center fixed-bottom p-2 mt-5">
-      Coppyright &copy; 2024
+
+    <footer
+      style="
+        background: linear-gradient(
+          to right,
+          #6a1b9a,
+          #8e24aa,
+          #ab47bc,
+          #d81b60
+        );
+        color: #fff;
+        padding: 20px 0;
+        margin-top: 50px;
+      "
+    >
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4" style="margin-bottom: 20px">
+            <h5
+              style="
+                font-size: 18px;
+                margin-bottom: 15px;
+                text-transform: uppercase;
+                color: #fff;
+              "
+            >
+              Explore - Điện thoại chính hãng
+            </h5>
+            <p style="font-size: 14px; margin: 5px 0; color: #fff">
+              Địa chỉ: 123 Nguyễn Văn Linh, Quận 7, TP.HCM
+            </p>
+            <p style="font-size: 14px; margin: 5px 0; color: #fff">
+              Hotline:
+              <a href="#" style="color: #fff; text-decoration: none"
+                >0123 456 789</a
+              >
+            </p>
+            <p style="font-size: 14px; margin: 5px 0; color: #fff">
+              Email:
+              <a href="#" style="color: #fff; text-decoration: none"
+                >support@explore.com</a
+              >
+            </p>
+          </div>
+          <div class="col-md-4" style="margin-bottom: 20px">
+            <h5
+              style="
+                font-size: 18px;
+                margin-bottom: 15px;
+                text-transform: uppercase;
+                color: #fff;
+              "
+            >
+              Liên kết nhanh
+            </h5>
+            <ul style="list-style-type: none; padding: 0; font-size: 14px">
+              <li>
+                <a href="#" style="color: #fff; text-decoration: none"
+                  >Trang chủ</a
+                >
+              </li>
+              <li>
+                <a href="#" style="color: #fff; text-decoration: none"
+                  >Sản phẩm</a
+                >
+              </li>
+              <li>
+                <a href="#" style="color: #fff; text-decoration: none"
+                  >Liên hệ</a
+                >
+              </li>
+              <li>
+                <a href="#" style="color: #fff; text-decoration: none"
+                  >Giới thiệu</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4" style="margin-bottom: 20px">
+            <h5
+              style="
+                font-size: 18px;
+                margin-bottom: 15px;
+                text-transform: uppercase;
+                color: #fff;
+              "
+            >
+              Theo dõi chúng tôi
+            </h5>
+            <div class="social-icons">
+              <a
+                href="#"
+                style="color: #fff; margin-right: 15px; font-size: 20px"
+                ><i class="fab fa-facebook"></i
+              ></a>
+              <a
+                href="#"
+                style="color: #fff; margin-right: 15px; font-size: 20px"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a
+                href="#"
+                style="color: #fff; margin-right: 15px; font-size: 20px"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: #fff; font-size: 20px"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 14px">
+          <p>© 2024 Explore. All Rights Reserved.</p>
+        </div>
+      </div>
     </footer>
+
+    <script src="{% static 'app/js/cart.js' %}"></script>
   </body>
 </html>

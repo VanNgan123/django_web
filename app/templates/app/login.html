@@ -1,0 +1,93 @@
+{% extends 'app/base.html' %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    
+  </head>
+  <body>
+    {% block login %}
+    <section class="vh-100" style="background-color: #f8f9fa">
+      <div class="container h-100 w-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-md-12 col-lg-9 col-xl-8">
+            <div class="card" style="border-radius: 25px">
+              <div class="row g-0">
+                <!-- Phần form bên trái -->
+                <div class="col-md-6 p-4">
+                  <div class="text-center mb-4">
+                    <h1 class="fw-bold">Login</h1>
+                  </div>
+                  <form method="POST">
+                    {% csrf_token %}
+                    <!-- Username -->
+                    <div class="mb-3">
+                      <label for="username" class="form-label">
+                        <i class="fas fa-user me-2"></i>Username
+                      </label>
+                      <input
+                        type="text"
+                        id="username"
+                        class="form-control"
+                        name="username"
+                        placeholder="Enter your username"
+                        required
+                      />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                      <label for="password" class="form-label">
+                        <i class="fas fa-lock me-2"></i>Password
+                      </label>
+                      <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                      />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center mt-4">
+                      <button type="submit" class="btn btn-primary btn-lg px-4">
+                        Login
+                      </button>
+                    </div>
+                    <p class="text-center text-muted mt-5 mb-0">Don't have an account? <a href="{% url 'register' %}" class="fw-bold text-body"><u>Sign up</u></a>
+                      {% for message in messages %}
+                      <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                      </div>
+                      {% endfor %}
+                    </form>
+                </div>
+
+                <!-- Phần hình ảnh bên phải -->
+                <div
+                  class="col-md-6 d-flex align-items-center justify-content-center"
+                  style="
+                    background-color: #f0f2f5;
+                    border-radius: 0 25px 25px 0;
+                  "
+                >
+                  <img
+                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                    class="img-fluid"
+                    alt="Sample image"
+                    style="width: 90%; border-radius: 15px"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endblock login %}
+  </body>
+</html>
